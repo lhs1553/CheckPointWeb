@@ -1,0 +1,6 @@
+<div *ngIf="!session" style="text-align: center">
+     URL : <input type="text" name="serverHost" [(ngModel)]="serverInfo.baseUrl">
+     PW : <input type="password" name="serverHost" [(ngModel)]="loginInfo.token">&nbsp;
+    <button pButton class="ui-button-secondary" label="login" (click)="login(false)"></button>
+    <br>
+</div>

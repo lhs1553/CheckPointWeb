@@ -1,0 +1,23 @@
+
+<app-login *ngIf="!session" (loginSuccess)="loginSuccesss()"></app-login>
+
+<div class="ui-g">
+<div class="ui-g-3">
+
+  <div *ngIf="session" style="text-align: left">
+
+    <h3>
+      {{getBaseUrl()}}
+      <i class="pi pi-bars" (click)="openMenu()"></i>
+    </h3>
+  </div>
+
+  <app-url-list (urlChanged)="urlChange($event)"></app-url-list>
+</div>
+<div class="ui-g-9">
+  <app-url-detail ></app-url-detail>
+</div>
+</div>
+
+<app-main-menu [visible]="menuView" (onHide)="menuView=false" (logout)="logout()" (refresh)="refresh()"></app-main-menu>
+
