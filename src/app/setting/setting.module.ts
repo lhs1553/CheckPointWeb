@@ -18,6 +18,7 @@ import { MainMenuComponent } from './menu/main-menu/main-menu.component';
 import { DownloadMenuComponent } from './menu/download-menu/download-menu.component';
 import { ImportMenuComponent } from './menu/import-menu/import-menu.component';
 import { CookieStoreService } from '../util/cookie-store';
+import { ScanMenuComponent } from './menu/scan-menu/scan-menu.component';
 
 
 @NgModule({
@@ -28,7 +29,7 @@ import { CookieStoreService } from '../util/cookie-store';
     AccordionModule, ButtonModule, TreeTableModule ,CheckboxModule,DropdownModule,DialogModule,FileUploadModule
   ],
   declarations: [UrlListComponent, DashboardComponent, UrlDetailComponent, ValidationDataComponent
-    ,LoginComponent, UrlItemComponent, ListInputBoxComponent, MainMenuComponent, DownloadMenuComponent, ImportMenuComponent ],
+    ,LoginComponent, UrlItemComponent, ListInputBoxComponent, MainMenuComponent, DownloadMenuComponent, ImportMenuComponent, ScanMenuComponent ],
   providers:[
     ApplicationHttpClient,CookieService,CookieStoreService
   ]

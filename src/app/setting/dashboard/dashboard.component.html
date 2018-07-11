@@ -9,6 +9,7 @@
     <h3>
       {{getBaseUrl()}}
       <i class="pi pi-bars" (click)="openMenu()"></i>
+      <i class="pi pi-refresh" (click)="openScanMenu()"></i>
     </h3>
   </div>
 
@@ -20,4 +21,5 @@
 </div>
 
 <app-main-menu [visible]="menuView" (onHide)="menuView=false" (logout)="logout()" (refresh)="refresh()"></app-main-menu>
+<app-scan-menu [visible]="scanMenuView" (onHide)="scanMenuView=false"></app-scan-menu>
 

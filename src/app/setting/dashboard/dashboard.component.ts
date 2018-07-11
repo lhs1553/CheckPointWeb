@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   selectUrl:ReqUrl=new ReqUrl();
   session:boolean;
   menuView:boolean=false;
+  scanMenuView:boolean=false;
   
 
   @ViewChild(UrlDetailComponent) UrlDetailComponent:UrlDetailComponent;
@@ -28,6 +29,9 @@ export class DashboardComponent implements OnInit {
 
   openMenu(){
     this.menuView = true;
+  }
+  openScanMenu(){
+    this.scanMenuView = true;
   }
 
   getBaseUrl(){
