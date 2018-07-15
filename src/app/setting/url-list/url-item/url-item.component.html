@@ -7,7 +7,8 @@
     <i *ngIf="!url.favorite" class="pi pi-star-o" (click)="selectFavorite(url)"> </i>
 
     <button *ngIf="!url.select" pButton class="ui-button-secondary" label={{url.url}} (click)="selectUrl(url)"></button> 
-    <button *ngIf="url.select" pButton class="ui-button-success" label={{url.url}} (click)="selectUrl(url)"></button>
+    <button *ngIf="url.select && !url.urlMapping" pButton class="ui-button-success" label={{url.url}} (click)="selectUrl(url)"></button>
+    <button *ngIf="url.select && url.urlMapping" pButton class="ui-button-Info" label={{url.url}} (click)="selectUrl(url)"></button>
     <i *ngIf="url.select" class="pi pi-trash" (click)="delete(url)"> </i>
     <i *ngIf="url.select" class="pi pi-cloud-download" (click)="menuPopup(url)"> </i>
 
