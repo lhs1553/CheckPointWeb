@@ -34,7 +34,9 @@ export class UrlItemComponent implements OnInit {
 
   delete(url:ReqUrl){
     if (confirm("are you delete?")) {
+      if (url.favorite) { url.favorite = false; this.favoriteClick.emit(url); }
       this.settingService.delete(url).subscribe(res => {
+
         this.selectUrl(null);
         this.urlMap.urlList = this.urlMap.urlList.filter(u => u != url);
       },error => {
