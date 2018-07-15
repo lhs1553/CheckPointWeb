@@ -10,6 +10,7 @@ export class ScanMenuComponent implements OnInit {
 
   @Input() visible: boolean;
   @Output() onHide: EventEmitter<any> = new EventEmitter<any>();
+  @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
 
   maxDeepLevel:number = 5;
   ing:boolean=false;
@@ -30,6 +31,7 @@ export class ScanMenuComponent implements OnInit {
 
   complete(){
     alert("Scan Complete!!")
+    this.refresh.emit();
     this.hide();
   }
 
