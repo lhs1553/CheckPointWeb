@@ -22,7 +22,7 @@ export class UrlListComponent implements OnInit {
   urlList:ReqUrl[];
   urlListMap:UrlListMap[]=[];
 
-  methods=[Method.FAVORITES, Method.POST, Method.GET, Method.PUT, Method.DELETE];
+  methods=[Method.FAVORITES, Method.POST, Method.GET, Method.PUT, Method.PATCH, Method.DELETE];
 
   saveFavorites(){
     let favorites = this.urlList.filter(url=>url.favorite);
