@@ -6,6 +6,7 @@
     <i *ngIf="url.favorite" class="pi pi-star"  (click)="selectFavorite(url)"> </i>
     <i *ngIf="!url.favorite" class="pi pi-star-o" (click)="selectFavorite(url)"> </i>
 
+    {{getUrlMappingType(url)}}
     <button *ngIf="!url.select" pButton class="ui-button-secondary" label={{url.url}} (click)="selectUrl(url)"></button> 
     <button *ngIf="url.select && !url.urlMapping" pButton class="ui-button-success" label={{url.url}} (click)="selectUrl(url)"></button>
     <button *ngIf="url.select && url.urlMapping" pButton class="ui-button-Info" label={{url.url}} (click)="selectUrl(url)"></button>

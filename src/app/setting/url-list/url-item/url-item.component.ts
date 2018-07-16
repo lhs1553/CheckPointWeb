@@ -48,6 +48,10 @@ export class UrlItemComponent implements OnInit {
     }
   }
 
+  getUrlMappingType(url:ReqUrl){
+    return url.urlMapping ? "U" :"F";
+  }
+
   menuPopup(url:ReqUrl){
     this.menuView=true;
   }
