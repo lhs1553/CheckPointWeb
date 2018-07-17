@@ -9,7 +9,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prod": "ng serve --port 7000  --host 0.0.0.0 --disable-host-check --no-live-reload"
-
   },
   "private": true,
   "dependencies": {
@@ -24,6 +23,7 @@
     "@angular/router": "^6.0.3",
     "core-js": "^2.5.4",
     "ngx-cookie-service": "^1.0.10",
+    "now": "^11.2.9",
     "primeicons": "^1.0.0-beta.9",
     "primeng": "^6.0.0",
     "rxjs": "^6.0.0",
