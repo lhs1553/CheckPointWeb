@@ -59,7 +59,13 @@ export class UrlListComponent implements OnInit {
     this.settingService.getUrlAllList().subscribe(res => {
       this.urlList = res; 
       this.initUrlList();
-    })
+    } , error => {
+        if (error.status == 401) {
+          this.cookieStore.setServerInfo(null);
+          window.location.reload();
+        }
+      } 
+    );
   }
   initUrlList(){
     this.urlListMap =[];

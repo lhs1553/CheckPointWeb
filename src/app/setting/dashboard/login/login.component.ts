@@ -3,58 +3,77 @@ import { ApplicationHttpClient } from '../../../util/http.client';
 import { ServerInfo } from './server-info';
 import { LoginInfo } from './login-info';
 import { CookieStoreService } from '../../../util/cookie-store';
+import { SelectItem } from '../../../../../node_modules/primeng/api';
+import { ActivatedRoute, Router } from '../../../../../node_modules/@angular/router';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+    inputNewUrl:boolean=true;
 
-  @Output() 
-  loginSuccess :EventEmitter<any> = new EventEmitter<any>();
+    loginInfo: LoginInfo = new LoginInfo('', '');
+    serverInfo: ServerInfo;
 
-  @Input() session;
+    urlHistory: SelectItem[];
 
-  loginInfo:LoginInfo = new LoginInfo('','');
-  serverInfo:ServerInfo;
+    constructor(public http: ApplicationHttpClient, private cookieStore: CookieStoreService, private router:Router) { }
 
+    ngOnInit() {
+        this.urlHistory = this.cookieStore.getData('urlhistory');
+        let defaultUrl = 'http://localhost:8080';
+        if (this.urlHistory && this.urlHistory.length > 0) {
+            this.inputNewUrl = false;
+            defaultUrl = this.urlHistory[0].value
+            console.log(defaultUrl)
+        }
 
-  constructor(public http :ApplicationHttpClient, private cookieStore:CookieStoreService) { }
-
-  ngOnInit() {
-    this.serverInfo= this.cookieStore.getServerInfo();
-    if (!this.serverInfo) {
-      this.serverInfo = new ServerInfo("http://localhost:8080", null);
-    }else{
-      this.loginToken();
+        this.serverInfo = this.cookieStore.getServerInfo();
+        
+        if (!this.serverInfo) {
+            this.serverInfo = new ServerInfo(defaultUrl, null);
+        } else {
+            this.loginToken();
+        }
+        console.log("defualtUrl " + this.serverInfo.baseUrl)
     }
-  }
+
+    addUrlHistory(url: string) {
+        if (!this.urlHistory) { this.urlHistory = []; }
+        let exist = this.urlHistory.find(urlhis => urlhis.value == url);
+        if (!exist) {
+            this.urlHistory.push({ label: url, value: url });
+        }
+
+        this.cookieStore.setData('urlhistory', this.urlHistory);
+    }
+
+    loginToken() {
+        this.login(true);
+    }
+
+    login(serverToken: boolean) {
+
+        let token = serverToken ? this.serverInfo.token : this.loginInfo.token;
+        if(!token ){ return; }
+
+        this.http.post<any>("/auth", {token:token}).toPromise().then(res => {
+            this.addUrlHistory(this.serverInfo.baseUrl);
+            this.serverInfo.token = res.token;
+            this.cookieStore.setServerInfo(this.serverInfo);
+            this.router.navigate(['/list'])
+        }).catch(err => {
+            this.loginInfo.token = '';
+            this.serverInfo.token = null;
+            this.cookieStore.setServerInfo(this.serverInfo);
+            if (!serverToken) {
+                alert("login fail ");
+            }
+        });
+
+    }
 
 
-  loginToken(){
-    this.loginInfo.token = this.serverInfo.token;
-    this.login(true);
-  }
-
-  login(serverToken:boolean){
-    if (!this.loginInfo.token) { return; }
-
-    this.http.post<any>("/auth", this.loginInfo).toPromise().then(res => {
-      this.serverInfo.token = res.token;
-      this.loginSuccess.emit(this.serverInfo);
-      this.session = true;
-      this.cookieStore.setServerInfo(this.serverInfo);
-    }).catch(err => {
-      this.loginInfo.token = '';
-      this.serverInfo.token = null;
-      this.cookieStore.setServerInfo(this.serverInfo);
-      if (!serverToken) {
-        alert("login fail ");
-      }
-    });
-
-  }
-
-  
 }

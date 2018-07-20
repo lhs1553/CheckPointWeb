@@ -5,6 +5,7 @@ import { ApplicationHttpClient } from '../../util/http.client';
 import { UrlListComponent } from '../url-list/url-list.component';
 import { CookieStoreService } from '../../util/cookie-store';
 import { ServerInfo } from './login/server-info';
+import { Router } from '../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,17 +15,35 @@ import { ServerInfo } from './login/server-info';
 export class DashboardComponent implements OnInit {
 
   selectUrl:ReqUrl=new ReqUrl();
-  session:boolean;
   menuView:boolean=false;
   scanMenuView:boolean=false;
+  tabSize:number=1;
   
 
   @ViewChild(UrlDetailComponent) UrlDetailComponent:UrlDetailComponent;
   @ViewChild(UrlListComponent) UrlListComponent:UrlListComponent;
 
-  constructor(private cookieStore:CookieStoreService){ }
+  constructor(private cookieStore:CookieStoreService, private router:Router){ }
 
   ngOnInit() {
+      let serverInfo = this.cookieStore.getServerInfo();
+      if(!serverInfo || !serverInfo.token){ this.logout(); return; }
+      this.tabSize = this.cookieStore.getData('tabSize');
+  }
+
+
+  getUiClassName(size:number){
+    return "ui-g-"+size;
+  }
+  updateTabSize(plus:number){
+    this.tabSize+= plus;
+    if(this.tabSize < 1 ){
+        this.tabSize = 1 ;
+    }
+    else if(this.tabSize > 4){
+        this.tabSize = 4;
+    }
+    this.cookieStore.setData('tabSize', this.tabSize);
   }
 
   openMenu(){
@@ -43,25 +62,17 @@ export class DashboardComponent implements OnInit {
 
   logout(){
     let serverInfo:ServerInfo = this.cookieStore.getServerInfo();
-    if(serverInfo){
-      serverInfo.token = null;
-    }
-    this.cookieStore.setServerInfo(serverInfo)
+    if(serverInfo){ serverInfo.token = null; }
 
-    this.session = false;
-    this.refresh();
+    this.cookieStore.setServerInfo(serverInfo)
+    this.router.navigate(['']);
   }
 
   refresh() {
     this.UrlListComponent.refresh();
     this.UrlDetailComponent.refresh();
   }
-  loginSuccesss() {
-    this.session = true;
-    this.refresh();
-  }
 
- 
 
   urlChange(url: ReqUrl) {
     if (!url) {
@@ -70,6 +81,7 @@ export class DashboardComponent implements OnInit {
     else {
       this.UrlDetailComponent.refreshUrl(url);
     }
+    window.scroll(0,0)
   }
 }
 

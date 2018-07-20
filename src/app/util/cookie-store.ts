@@ -62,6 +62,9 @@ export class CookieStoreService {
   public setServerInfo(serverInfo:ServerInfo){
     return this.setData("serverInfo", serverInfo);
   }
+  public loginSuccess(serverInfo:ServerInfo){
+      this.cookie.set('AuthHeader',serverInfo.token, null, '/', serverInfo.baseUrl, false);
+  }
 
   
 }

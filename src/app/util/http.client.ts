@@ -1,8 +1,10 @@
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/index";
 import { CookieService } from 'ngx-cookie-service';
 import { CookieStoreService } from './cookie-store';
+
+
 
 export interface IRequestOptions {
     headers?: HttpHeaders;
@@ -18,11 +20,9 @@ export interface IRequestOptions {
 @Injectable()
 export class ApplicationHttpClient {
 
-    private getDefaultOptions(option:IRequestOptions, method: string): IRequestOptions {
+
+    private getDefaultHeaders(headers:HttpHeaders, method: string, file?:boolean): HttpHeaders{
         let serverInfo = this.cookieStore.getServerInfo();
-        let opt = option;
-        if (!opt){ opt = {}; }
-        let headers = opt.headers;
 
         if( !headers){ headers  = new HttpHeaders(); }
 
@@ -30,16 +30,19 @@ export class ApplicationHttpClient {
             headers = headers.append('Authorization', serverInfo.token);
         }
         if (method != 'GET') {
-            headers = headers.append('Content-Type', 'application/json');
+            headers = headers.append('Content-Type', file ? 'multipart/form-data':'application/json');
         }
+        return headers;
+    }
 
-        opt.headers = headers;
-
+    private getDefaultIOptions(option:IRequestOptions, method: string, file?:boolean): IRequestOptions{
+        let opt  = option;
+        if ( !opt){ opt = {}; }
+        opt.headers = this.getDefaultHeaders(opt.headers, method, file);
         return opt;
     }
 
     private prefix = '/setting';
-
 
     public getUrl(endPoint:string):string{
         
@@ -66,7 +69,11 @@ export class ApplicationHttpClient {
      * @returns {Observable<T>}
      */
     public get<T>(endPoint: string, options?: IRequestOptions): Observable<T> {
-        return this.http.get<T>(this.getUrl(endPoint), this.getDefaultOptions(options,"GET"));
+        return this.http.get<T>(this.getUrl(endPoint), this.getDefaultIOptions(options,"GET"));
+    }
+
+    public getBlob(endPoint: string, options?: any):Observable<HttpResponse<Blob>> {
+        return this.http.get(this.getUrl(endPoint), {responseType:'blob', observe:'response', headers:this.getDefaultHeaders(null, "GET")});
     }
 
     /**
@@ -77,7 +84,7 @@ export class ApplicationHttpClient {
      * @returns {Observable<T>}
      */
     public post<T>(endPoint: string, params: Object, options?: IRequestOptions): Observable<T> {
-        return this.http.post<T>(this.getUrl(endPoint), params, this.getDefaultOptions(options, "POST"));
+        return this.http.post<T>(this.getUrl(endPoint), params, this.getDefaultIOptions(options, "POST"));
     }
 
     /**
@@ -88,7 +95,7 @@ export class ApplicationHttpClient {
      * @returns {Observable<T>}
      */
     public put<T>(endPoint: string, params: Object, options?: IRequestOptions): Observable<T> {
-        return this.http.put<T>(this.getUrl(endPoint), params, this.getDefaultOptions(options,"PUT"));
+        return this.http.put<T>(this.getUrl(endPoint), params, this.getDefaultIOptions(options,"PUT"));
     }
 
     /**
@@ -98,15 +105,19 @@ export class ApplicationHttpClient {
      * @returns {Observable<T>}
      */
     public delete<T>(endPoint: string, options?: IRequestOptions): Observable<T> {
-        return this.http.delete<T>(this.getUrl(endPoint), this.getDefaultOptions(options,"DELETE"));
+        return this.http.delete<T>(this.getUrl(endPoint), this.getDefaultIOptions(options,"DELETE"));
     }
 
-    fileDownload(url: string) {
-        url = this.getUrl(url);
+
+
+    fileDownload(res: any, filename: string, type: string) {
+        var url = window.URL.createObjectURL(res.body);
         var a = document.createElement('a');
         document.body.appendChild(a);
         a.setAttribute('style', 'display: none');
-        a.href = url; a.click();
+        a.href = url;
+        a.download = filename + '.' + type;
+        a.click();
         window.URL.revokeObjectURL(url);
         a.remove();
     }

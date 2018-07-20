@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ApplicationHttpClient } from '../../../util/http.client';
+import { CookieStoreService } from '../../../util/cookie-store';
 
 @Component({
   selector: 'app-import-menu',
@@ -8,7 +9,7 @@ import { ApplicationHttpClient } from '../../../util/http.client';
 })
 export class ImportMenuComponent implements OnInit {
 
-  constructor(private http :ApplicationHttpClient) { }
+  constructor(private http :ApplicationHttpClient, private cookieStore:CookieStoreService) { }
 
   @Input() visible: boolean;
   @Output() onHide: EventEmitter<any> = new EventEmitter<any>();
@@ -16,7 +17,9 @@ export class ImportMenuComponent implements OnInit {
   ngOnInit() {
   }
   getUploadUrl(){
-    return this.http.getUrl("/upload/json");
+    let url = this.http.getUrl("/upload/json");
+    url += '?token=' + this.cookieStore.getServerInfo().token;
+    return url;
   }
   hide() {
     this.visible = false;
@@ -26,6 +29,5 @@ export class ImportMenuComponent implements OnInit {
     alert("import completed!")
     this.hide();
   }
-
 
 }

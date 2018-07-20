@@ -41,11 +41,15 @@ export class MainMenuComponent implements OnInit {
     this.logout.emit();
   }
   downloadJson() {
-    this.http.fileDownload("/download/api/json/all");
+    this.http.getBlob("/download/api/json/all").subscribe(res =>{
+            this.http.fileDownload(res, 'checkpoint_export', 'json');
+    })
     this.hide();
   }
   downloadExcel() {
-    this.http.fileDownload("/download/api/excel/all");
+    this.http.getBlob("/download/api/excel/all").subscribe(res =>{
+            this.http.fileDownload(res, 'checkpoint_export', 'xls');
+    })
     this.hide();
   }
 

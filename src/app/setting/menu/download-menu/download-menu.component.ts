@@ -18,12 +18,20 @@ export class DownloadMenuComponent implements OnInit {
   ngOnInit() {
   }
 
+  getReqUrlKey(){
+    return this.reqUrl.method + '_' + this.reqUrl.url + '_';
+  }
+
   downloadJson(){
-    this.http.fileDownload("/download/api/json?method="+this.reqUrl.method + "&url=" + btoa(this.reqUrl.url))
+    this.http.getBlob("/download/api/json?method="+this.reqUrl.method + "&url=" + btoa(this.reqUrl.url)).subscribe(res =>{
+            this.http.fileDownload(res, this.getReqUrlKey() + 'checkpoint_export', 'json');
+    })
     this.hide();
   }
   downloadExcel(){
-    this.http.fileDownload("/download/api/excel?method="+this.reqUrl.method + "&url=" + btoa(this.reqUrl.url))
+    this.http.getBlob("/download/api/excel?method="+this.reqUrl.method + "&url=" + btoa(this.reqUrl.url)).subscribe(res =>{
+            this.http.fileDownload(res, this.getReqUrlKey() +'checkpoint_export', 'xls');
+    })
     this.hide();
   }
 

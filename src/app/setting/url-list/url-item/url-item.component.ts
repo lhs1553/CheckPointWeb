@@ -4,6 +4,7 @@ import { UrlListMap } from '../url-list-map';
 import { SettingService } from '../../setting.service';
 import { ApplicationHttpClient } from '../../../util/http.client';
 import { HttpParams } from '@angular/common/http';
+import { CookieStoreService } from '../../../util/cookie-store';
 
 @Component({
   selector: 'app-url-item',
@@ -19,7 +20,7 @@ export class UrlItemComponent implements OnInit {
    menuView=false;
   selectedUrl:ReqUrl;
 
-  constructor(private settingService:SettingService, private http:ApplicationHttpClient) { }
+  constructor(private settingService:SettingService, private cookieStore:CookieStoreService, private http:ApplicationHttpClient) { }
 
   ngOnInit() {
   }
