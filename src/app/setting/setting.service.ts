@@ -18,6 +18,9 @@ export class SettingService {
   public deleteAll(validationDatas:ValidationData[]){
     return this.http.delete("/delete/param/from/url", {body:validationDatas})
   }
+  public cleanAll(){
+    return this.http.delete("/delete/all");
+  }
 
   public getUrlAllList():Observable<ReqUrl[]>{
     return this.http.get<ReqUrl[]>("/url/list/all");

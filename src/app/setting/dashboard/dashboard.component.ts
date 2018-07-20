@@ -6,6 +6,7 @@ import { UrlListComponent } from '../url-list/url-list.component';
 import { CookieStoreService } from '../../util/cookie-store';
 import { ServerInfo } from './login/server-info';
 import { Router } from '../../../../node_modules/@angular/router';
+import { SettingService } from '../setting.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +24,7 @@ export class DashboardComponent implements OnInit {
   @ViewChild(UrlDetailComponent) UrlDetailComponent:UrlDetailComponent;
   @ViewChild(UrlListComponent) UrlListComponent:UrlListComponent;
 
-  constructor(private cookieStore:CookieStoreService, private router:Router){ }
+  constructor(private settingService:SettingService, private cookieStore:CookieStoreService, private router:Router){ }
 
   ngOnInit() {
       let serverInfo = this.cookieStore.getServerInfo();
@@ -66,6 +67,15 @@ export class DashboardComponent implements OnInit {
 
     this.cookieStore.setServerInfo(serverInfo)
     this.router.navigate(['']);
+  }
+
+  clean(){
+    if (confirm("are you delete all data?")) {
+        this.settingService.cleanAll().subscribe(res =>{
+            this.cookieStore.setData('ValidationFavorites', '');
+            this.refresh();
+        })
+    }
   }
 
   refresh() {

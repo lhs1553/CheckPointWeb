@@ -37,7 +37,8 @@ export class LoginComponent implements OnInit {
         } else {
             this.loginToken();
         }
-        console.log("defualtUrl " + this.serverInfo.baseUrl)
+
+        this.cookieStore.setServerInfo(this.serverInfo);
     }
 
     addUrlHistory(url: string) {
