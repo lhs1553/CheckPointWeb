@@ -12,6 +12,7 @@ export class ImportMenuComponent implements OnInit {
   constructor(private http :ApplicationHttpClient, private cookieStore:CookieStoreService) { }
 
   @Input() visible: boolean;
+  @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
   @Output() onHide: EventEmitter<any> = new EventEmitter<any>();
 
   ngOnInit() {
@@ -27,6 +28,7 @@ export class ImportMenuComponent implements OnInit {
   }
   uploadCompleted(){
     alert("import completed!")
+    this.refresh.emit();
     this.hide();
   }
 

@@ -11,5 +11,5 @@
         <br> <br>
         <button pButton style="background-color: rgb(179, 181, 185)" class="ui-button-secondary" label="Logout" (click)="selectLogout()"></button>
   </div>
-<app-import-menu [visible]="importMenuView" (onHide)="importMenuView=false"></app-import-menu>
+<app-import-menu [visible]="importMenuView" (refresh)="refreshClick()" (onHide)="importMenuView=false"></app-import-menu>
 </p-dialog>

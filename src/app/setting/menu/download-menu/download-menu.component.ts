@@ -31,7 +31,13 @@ export class DownloadMenuComponent implements OnInit {
   downloadExcel(){
     this.http.getBlob("/download/api/excel?method="+this.reqUrl.method + "&url=" + btoa(this.reqUrl.url)).subscribe(res =>{
             this.http.fileDownload(res, this.getReqUrlKey() +'checkpoint_export', 'xls');
-    })
+    }, error => {
+      if (error.status == 424) {
+        alert("Not found apache POI library, must import poi to your maven or gradle dependency")
+      }
+    }
+    )
+
     this.hide();
   }
 
