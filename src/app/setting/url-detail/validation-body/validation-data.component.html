@@ -12,7 +12,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th >Name </th>
-                <th *ngIf="!isHidden('Type')" style="width: 7%">Type
+                <th *ngIf="!isHidden('Type')" style="width: 10%">Type
                     <i class="pi pi-minus-circle" (click)="updateHiddenTap('Type', true)"></i>
                 </th>
 
@@ -25,18 +25,14 @@
         </ng-template>
         <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
             <tr *ngIf="!rowData.del">
-                <td>
-                    <div *ngIf="rowData.id">
-                    <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                <td style="font-size: 80%">
+                    <p-treeTableToggler  [rowNode]="rowNode"></p-treeTableToggler>
                     {{rowData.name}}
-                </div>
-                    <input *ngIf="!rowData.id" style="width: 100%" type="text" [(ngModel)]="rowData.name" name="namebox{{rowData.id}}" >
-
 
                 </td>
                 <td *ngIf="!isHidden('Type')" style="text-align: center">
 
-                    <div *ngIf="rowData.id || paramType != 'BODY'"> {{rowData.type}} </div>
+                    <div *ngIf="rowData.id || paramType != 'BODY'" style="font-size: 80%"> {{rowData.type}} </div>
 
                      <p-dropdown [options]="selectTypes" [(ngModel)]="rowData.type" [style]="{'width':'100%'}" (onChange)="updateType(rowData, $event.value)" *ngIf="!rowData.id && paramType =='BODY'"></p-dropdown>
                 </td>

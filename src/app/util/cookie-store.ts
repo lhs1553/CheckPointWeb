@@ -56,6 +56,15 @@ export class CookieStoreService {
     return map.value;
   }
 
+  public setCookie(key:string, value:any){
+    this.cookie.set(key, JSON.stringify(value), this.getExpiredDate());
+  }
+  public getCookie(key:string):any{
+    let json = this.cookie.get(key);
+    if(!json ){ return null; }
+    return JSON.parse(json);
+  }
+
   public getServerInfo():ServerInfo{
     return this.getData("serverInfo");
   }

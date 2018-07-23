@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
       let serverInfo = this.cookieStore.getServerInfo();
       if(!serverInfo || !serverInfo.token){ this.logout(); return; }
       this.tabSize = this.cookieStore.getData('tabSize');
+      if(this.tabSize < 1){ this.tabSize = 2; }
   }
 
 

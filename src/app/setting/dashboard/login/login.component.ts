@@ -22,12 +22,15 @@ export class LoginComponent implements OnInit {
     constructor(public http: ApplicationHttpClient, private cookieStore: CookieStoreService, private router:Router) { }
 
     ngOnInit() {
-        this.urlHistory = this.cookieStore.getData('urlhistory');
-        let defaultUrl = 'http://localhost:8080';
+        this.urlHistory = this.cookieStore.getCookie('urlhistory');
+        let defaultUrl = this.cookieStore.getData('defaultUrl') ;
+
         if (this.urlHistory && this.urlHistory.length > 0) {
             this.inputNewUrl = false;
-            defaultUrl = this.urlHistory[0].value
-            console.log(defaultUrl)
+            defaultUrl = this.urlHistory.find(url => url == defaultUrl);
+            if(!defaultUrl){
+                defaultUrl = this.urlHistory[0].value;
+            }
         }
 
         this.serverInfo = this.cookieStore.getServerInfo();
@@ -38,6 +41,7 @@ export class LoginComponent implements OnInit {
             this.loginToken();
         }
 
+        console.log(this.serverInfo)
         this.cookieStore.setServerInfo(this.serverInfo);
     }
 
@@ -48,7 +52,7 @@ export class LoginComponent implements OnInit {
             this.urlHistory.push({ label: url, value: url });
         }
 
-        this.cookieStore.setData('urlhistory', this.urlHistory);
+        this.cookieStore.setCookie('urlhistory', this.urlHistory);
     }
 
     loginToken() {
@@ -64,6 +68,7 @@ export class LoginComponent implements OnInit {
             this.addUrlHistory(this.serverInfo.baseUrl);
             this.serverInfo.token = res.token;
             this.cookieStore.setServerInfo(this.serverInfo);
+            this.cookieStore.setCookie('defaultUrl', this.serverInfo.baseUrl );
             this.router.navigate(['/list'])
         }).catch(err => {
             this.loginInfo.token = '';
